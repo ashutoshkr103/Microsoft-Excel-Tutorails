@@ -1,0 +1,55 @@
+-- create a table
+CREATE TABLE booksales (
+  id INTEGER PRIMARY KEY,
+  state TEXT NOT NULL,
+  datee date not NULL,
+  sales int
+);
+-- insert some values
+
+
+insert into booksales values(1,'Jharkhand','22-06-2022',603);
+insert into booksales values(2,'Jharkhand','21-06-2022',478);
+insert into booksales values(3,'Jharkhand','20-06-2022',679);
+insert into booksales values(4,'Jharkhand','19-06-2022',443);
+insert into booksales values(5,'Jharkhand','18-06-2022',540);
+insert into booksales values(6,'Jharkhand','17-06-2022',806);
+insert into booksales values(7,'Jharkhand','16-06-2022',939);
+insert into booksales values(8,'Jharkhand','15-06-2022',803);
+insert into booksales values(9,'Jharkhand','14-06-2022',440);
+insert into booksales values(10,'Jharkhand','13-06-2022',444);
+insert into booksales values(11,'Bihar','22-06-2022',563);
+insert into booksales values(12,'Bihar','21-06-2022',371);
+insert into booksales values(13,'Bihar','20-06-2022',881);
+insert into booksales values(14,'Bihar','19-06-2022',541);
+insert into booksales values(15,'Bihar','18-06-2022',829);
+insert into booksales values(16,'Bihar','17-06-2022',846);
+insert into booksales values(17,'Bihar','16-06-2022',653);
+insert into booksales values(18,'Bihar','15-06-2022',531);
+insert into booksales values(19,'Bihar','14-06-2022',327);
+insert into booksales values(20,'Bihar','13-06-2022',717);
+insert into booksales values(21,'Maharastra','22-06-2022',925);
+insert into booksales values(22,'Maharastra','21-06-2022',896);
+insert into booksales values(23,'Maharastra','20-06-2022',647);
+insert into booksales values(24,'Maharastra','19-06-2022',419);
+insert into booksales values(25,'Maharastra','18-06-2022',762);
+insert into booksales values(26,'Maharastra','17-06-2022',415);
+insert into booksales values(27,'Maharastra','16-06-2022',834);
+insert into booksales values(28,'Maharastra','15-06-2022',822);
+insert into booksales values(29,'Maharastra','14-06-2022',887);
+insert into booksales values(30,'Maharastra','13-06-2022',828);
+
+
+
+q)getting fifth day sales
+q)is sales incresaed from first day
+
+
+select *,case when a.n=1 then 'High'
+when a.n=2 then 'Medium'
+when a.n=3 then 'Low' end as Sales
+from
+(select *,ntile(3) 
+over(partition by state order by sales desc ) n
+from players)a
+;
