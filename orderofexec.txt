@@ -1,0 +1,7 @@
+SELECT distinct Shippers.ShipperName,COUNT(Orders.OrderID) AS NumberOfOrders FROM Orders
+LEFT JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID
+where Shippers.ShipperName in ('Federal Shipping','Speedy Express','United Package')
+GROUP BY ShipperName
+having COUNT(Orders.OrderID)>65
+order by NumberOfOrders desc
+limit 3;
