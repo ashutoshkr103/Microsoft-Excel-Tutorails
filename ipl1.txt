@@ -1,0 +1,94 @@
+drop table if exists #ipls;
+
+create table #ipls 
+(
+id	float,
+inning	float,
+overr	float,
+ball	float,
+batsman	nvarchar(255),
+non_striker	nvarchar(255),
+bowler	nvarchar(255),
+batsman_runs	float,
+extra_runs	float,
+total_runs	float,
+non_boundary	float,
+is_wicket	float,
+dismissal_kind	nvarchar(255),
+player_dismissed	nvarchar(255),
+fielder	nvarchar(255),
+extras_type	nvarchar(255),
+batting_team	nvarchar(255),
+bowling_team nvarchar(255)
+)
+
+insert into #ipls
+select * from tutorial.dbo.ipl1
+union
+select * from tutorial.dbo.ipl2
+union
+select * from tutorial.dbo.ipl3
+union
+select * from tutorial.dbo.ipl4;
+
+select count(*) from #ipls;
+select count(*) from tutorial.dbo.ipl1;
+select count(*) from tutorial.dbo.ipl2;
+select count(*) from tutorial.dbo.ipl3;
+select count(*) from tutorial.dbo.ipl4;
+
+select * from #ipls;
+select * from tutorial.dbo.ipl;
+
+
+select yr,count(distinct id) number_of_matches from
+(select year(date) yr,id from tutorial.dbo.ipl)a
+group by yr;
+
+
+
+select * from
+(select player_of_match,yr,mom,rank() over(partition by yr order by mom desc) rnk from
+(
+select player_of_match,year(date) yr,count(player_of_match) mom from tutorial.dbo.ipl 
+group by player_of_match,year(date) 
+)a)b
+where rnk=1;
+
+select top 5 venue,count(venue) 
+ from tutorial.dbo.ipl 
+ group by venue
+ order by count(venue) desc;
+
+ select sum(total_runs) from
+ (
+ select  batsman,sum(total_runs) total_runs from #ipls group by batsman 
+ )a;
+
+ select *,total_runs/sum(total_runs) over(order by total_runs rows between unbounded preceding and unbounded following) runs from
+ (select  batsman,sum(total_runs) total_runs from #ipls group by batsman )a;
+
+ select * from #ipls;
+
+ select top 1 batsman,count(batsman) from
+( select * from #ipls where batsman_runs=4)a
+group by batsman
+order by count(batsman) desc;
+]
+
+select top 1 batsman,batsman_runs,strike_rate from 
+(select batsman ,batsman_runs,((batsman_runs*1.0)/total_balls)*100 strike_rate from
+(select  batsman,sum(batsman_runs) batsman_runs,count(batsman) total_balls  from #ipls group by batsman )a)b
+where batsman_runs>=3000 order by strike_rate desc
+
+select * from #ipls;
+
+
+select top 1 bowler,(total_runs_conceded/(total_balls*1.0)) economy_rate from
+(select bowler,count(bowler) total_balls,sum(total_runs) total_runs_conceded
+from #ipls
+group by bowler)a
+where total_balls>300
+order by (total_runs_conceded/(total_balls*1.0))
+
+select winner,count(winner) from tutorial.dbo.ipl group by winner;
